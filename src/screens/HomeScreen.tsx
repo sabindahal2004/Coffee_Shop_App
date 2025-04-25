@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Alert,
+  FlatList,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -21,6 +22,7 @@ import {
 } from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import CustomIcon from '../components/CustomIcon';
+import CoffeeCard from '../components/CoffeeCard';
 
 const getCategoriesFromData = (data: any) => {
   let temp: any = {};
@@ -98,6 +100,75 @@ const HomeScreen = () => {
               style={styles.TextInputContainer}
             />
           </View>
+          {/* Category Scroller */}
+
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.CategoryScrollViewStyle}>
+            {categories.map((data, index) => (
+              <View
+                key={index.toString()}
+                style={styles.CategoryScrollViewConatainer}>
+                <TouchableOpacity
+                  style={styles.CategoryScrollViewItem}
+                  onPress={() => {
+                    setCategoryIndex({
+                      index: index,
+                      category: categories[index],
+                    });
+                    setSortedCoffee([
+                      ...getCoffeeList(categories[index], CoffeeList),
+                    ]);
+                  }}>
+                  <Text
+                    style={[
+                      styles.CategoryText,
+                      categoryIndex.index === index
+                        ? {color: COLORS.primaryOrangeHex}
+                        : {},
+                    ]}>
+                    {data}
+                  </Text>
+                  {categoryIndex.index === index ? (
+                    <View style={styles.ActiveCategory} />
+                  ) : (
+                    <></>
+                  )}
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* Coffee Flatlist */}
+
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={sortedCoffee}
+            contentContainerStyle={styles.FlatlistConatainer}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity onPress={() => {}}>
+                  <CoffeeCard
+                    id={item.id}
+                    index={item.index}
+                    name={item.name}
+                    type={item.type}
+                    roasted={item.roasted}
+                    imagelink_square={item.imagelink_square}
+                    special_ingredient={item.special_ingredient}
+                    price={item.prices[2]}
+                    average_rating={item.average_rating}
+                    bottonPressHandler={() => {}}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+
+          {/* Beans Flatlist */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -133,11 +204,38 @@ const styles = StyleSheet.create({
     marginHorizontal: SPACING.space_20,
   },
   TextInputContainer: {
-    flex:1,
+    flex: 1,
     height: SPACING.space_20 * 3,
     fontFamily: FONTFAMILY.poppins_medium,
     fontSize: FONTSIZE.size_14,
-    color:COLORS.primaryWhiteHex,
+    color: COLORS.primaryWhiteHex,
+  },
+  CategoryScrollViewStyle: {
+    paddingHorizontal: SPACING.space_20,
+    marginBottom: SPACING.space_20,
+  },
+  CategoryScrollViewConatainer: {
+    paddingHorizontal: SPACING.space_15,
+  },
+  ActiveCategory: {
+    height: SPACING.space_10,
+    width: SPACING.space_10,
+    borderRadius: BORDERRADIUS.radius_10,
+    backgroundColor: COLORS.primaryOrangeHex,
+  },
+  CategoryScrollViewItem: {
+    alignItems: 'center',
+  },
+  CategoryText: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_16,
+    color: COLORS.primaryLightGreyHex,
+    marginBottom: SPACING.space_4,
+  },
+  FlatlistConatainer: {
+    gap: SPACING.space_20,
+    paddingHorizontal: SPACING.space_30,
+    paddingVertical: SPACING.space_20,
   },
 });
 
