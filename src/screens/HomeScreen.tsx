@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
 import {
-  Alert,
   Dimensions,
   FlatList,
   ScrollView,
@@ -48,7 +47,7 @@ const getCoffeeList = (category: string, data: any) => {
   }
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}: any) => {
   const CoffeeList = useStore((state: any) => state.CoffeeList);
   const BeanList = useStore((state: any) => state.BeanList);
   const [categories, setCategories] = useState(
@@ -67,7 +66,7 @@ const HomeScreen = () => {
   const ListRef: any = useRef<FlatList>();
 
   const SearchCoffee = (searchText: string) => {
-    if (searchText != '') {
+    if (searchText !== '') {
       ListRef.current?.scrollToOffset({
         animated: true,
         offset: 0,
@@ -209,7 +208,10 @@ const HomeScreen = () => {
             keyExtractor={item => item.id}
             renderItem={({item}) => {
               return (
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push('Details');
+                  }}>
                   <CoffeeCard
                     id={item.id}
                     index={item.index}
@@ -240,7 +242,10 @@ const HomeScreen = () => {
             keyExtractor={item => item.id}
             renderItem={({item}) => {
               return (
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push('Details');
+                  }}>
                   <CoffeeCard
                     id={item.id}
                     index={item.index}
